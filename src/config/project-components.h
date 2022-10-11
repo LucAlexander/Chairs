@@ -1,0 +1,14 @@
+#ifndef USER_COMPONENTS_H
+#define USER_COMPONENTS_H
+
+#define USER_COMPONENTS\
+	SERVER_C,\
+	TAB_C,\
+	COMPONENT_COUNT
+
+#define USER_COMPONENT_SIZES\
+	,1048\
+	,1064
+	
+
+#endif
