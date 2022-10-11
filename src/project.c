@@ -11,11 +11,13 @@ void project_structs_init(xi_utils* xi){
 
 	server_address_space_init(&xi->project->address_space);
 	xi->project->controller.focused = NULL;
+	xi->project->controller.tabs = tab_listInit();
 }
 
 void xisetup(program_state* state, xi_utils* xi){
 	project_structs_init(xi);
 	system_add(state, system_init(mutate_tab, 2, POSITION_C, TAB_C), XI_STATE_UPDATE);
+	system_add(state, system_init(switch_tabs, 1, SINGLE_RUN_CONTROLLER_C), XI_STATE_UPDATE);
 	system_add(state, system_init(draw_tab, 2, POSITION_C, TAB_C), XI_STATE_RENDER);
 }
 
@@ -41,8 +43,11 @@ void spawn_window(xi_utils* xi, u32 x, u32 y, u32 w, u32 h){
 
 	strcpy(t.client, "The characters just dont like you the same way they like me,\nlittle boy :|");
 
+
 	component_add(xi->ecs, entity, POSITION_C, &pos);
 	component_add(xi->ecs, entity, TAB_C, &t);
+
+	tab_listPushBack(&xi->project->controller.tabs, component_get(xi->ecs, entity, TAB_C));
 }
 
 void xistart(xi_utils* xi){

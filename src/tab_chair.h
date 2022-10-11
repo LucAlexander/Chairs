@@ -24,8 +24,11 @@ typedef enum TAB_FLAGS{
 
 struct tab_chair;
 
+VECTOR(tab_list, struct tab_chair*)
+
 typedef struct tab_controller{
 	struct tab_chair* focused;
+	tab_list tabs;
 }tab_controller;
 
 typedef enum TAB_STATE{
@@ -45,5 +48,6 @@ typedef struct tab_chair{
 
 SYSTEM(draw_tab);
 SYSTEM(mutate_tab);
+SYSTEM(switch_tabs);
 
 #endif

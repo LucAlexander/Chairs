@@ -1,6 +1,8 @@
 #include "tab_chair.h"
 #include "project.h"
 
+VECTOR_SOURCE(tab_list, tab_chair*)
+
 SYSTEM(mutate_tab){
 	ARG(tab_chair* tab, TAB_C);
 	ARG(v2* position, POSITION_C);
@@ -150,8 +152,7 @@ SYSTEM(draw_tab){
 	}
 	renderSetColor(xi->graphics, 0, 0, 0, 0);
 	v2 mouse = mousePos(xi->user_input);
-	if (
-		mousePressed(xi->user_input, 1) && (
+	if (mousePressed(xi->user_input, 1) && (
 		(mouse.x < position->x + tab->w) &&
 		(mouse.y < position->y + tab->h) && 
 		(mouse.x > position->x) &&
@@ -160,3 +161,25 @@ SYSTEM(draw_tab){
 		xi->project->controller.focused = tab;
 	}
 }
+
+SYSTEM(switch_tabs){
+	u8 leftShift = keyHeld(xi->user_input, "Left Ctrl");
+	u8 tab = keyPressed(xi->user_input, "Tab");
+	if (mousePressed(xi->user_input, 1)){
+		xi->project->controller.focused = NULL;
+	}
+	if (leftShift && tab && xi->project->controller.focused != NULL){
+		u32 i, n = xi->project->controller.tabs.size;
+		for (i = 0;i<n;++i){
+			if (xi->project->controller.tabs.data[i]==xi->project->controller.focused){
+				i++;
+				break;
+			}
+		}
+		if (i == n){
+			i = 0;
+		}
+		xi->project->controller.focused = xi->project->controller.tabs.data[i]; // NOTE this means we need to remove in order when / if we remove data from the tabv vector
+	}
+}
+
