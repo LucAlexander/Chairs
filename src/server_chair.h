@@ -3,7 +3,7 @@
 
 #include "xi_engine.h"
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 
 VECTOR(address_stack, u64)
 
@@ -25,7 +25,7 @@ VECTOR(port_list, port_chair)
 typedef struct server_chair{
 	u64 address;
 	port_list ports;
-	i8 rom[1024];
+	i8 rom[BUFFER_SIZE];
 }server_chair;
 
 typedef struct server_address_space{

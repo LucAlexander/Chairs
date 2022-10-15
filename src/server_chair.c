@@ -31,7 +31,7 @@ void server_init(server_chair* s, u16 port_count, server_address_space* addr){
 		port_init(&p, s->address);
 		port_listPushBack(&s->ports, p);
 	}
-	strcpy(s->rom, "");
+	strcpy(s->rom, ""); // TODO replace
 }
 
 void server_send(server_chair* s, const char* data, u16 port){

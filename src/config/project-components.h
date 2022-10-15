@@ -4,11 +4,13 @@
 #define USER_COMPONENTS\
 	SERVER_C,\
 	TAB_C,\
+	CLIENT_C,\
 	COMPONENT_COUNT
 
 #define USER_COMPONENT_SIZES\
-	,1048\
-	,1064
+	,4120\
+	,4136\
+	,4100
 	
 
 #endif
