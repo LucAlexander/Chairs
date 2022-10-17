@@ -42,7 +42,7 @@ void spawn_window(xi_utils* xi, u32 x, u32 y, u32 w, u32 h){
 	t.flags = 0;
 	t.state = TAB_IDLE;
 
-	strcpy(t.client, "This is a single line test");
+	strcpy(t.client, "This is a single line test\nand this a multiline test");
 
 
 	component_add(xi->ecs, entity, POSITION_C, &pos);
@@ -65,9 +65,13 @@ void spawn_client(xi_utils* xi, u32 x, u32 y, u32 w, u32 h){
 	client_chair client;
 	client_buffer_init(&client);
 
+	server_chair s;
+	server_init(&s, 1, &xi->project->address_space);
+
 	component_add(xi->ecs, entity, POSITION_C, &pos);
 	component_add(xi->ecs, entity, TAB_C, &t);
 	component_add(xi->ecs, entity, CLIENT_C, &client);
+	component_add(xi->ecs, entity, SERVER_C, &s);
 
 	tab_listPushBack(&xi->project->controller.tabs, component_get(xi->ecs, entity, TAB_C));
 }

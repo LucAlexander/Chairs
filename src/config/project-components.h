@@ -8,7 +8,7 @@
 	COMPONENT_COUNT
 
 #define USER_COMPONENT_SIZES\
-	,4120\
+	,4136\
 	,4136\
 	,4100
 	

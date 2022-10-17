@@ -7,6 +7,8 @@
 #define LINE_WIDTH 64
 #define LINE_COUNT BUFFER_SIZE/LINE_WIDTH
 
+struct tab_chair;
+
 typedef struct input_stream{
 	char line[LINE_COUNT][LINE_WIDTH];
 	u8 target;
@@ -21,6 +23,9 @@ typedef struct client_chair{
 }client_chair;
 
 void client_buffer_init(client_chair* client);
+void scrollToCurrent(xi_utils* xi, client_chair* client, struct tab_chair* tab);
+
+void parseCommand(client_chair* client, server_chair* server);
 
 SYSTEM(client_input);
 

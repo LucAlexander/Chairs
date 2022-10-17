@@ -4,6 +4,27 @@
 #include "xi_engine.h"
 
 #define BUFFER_SIZE 4096
+#define FILE_SIZE 512
+#define FILE_EDGE_MAX 16
+#define FILE_NAME_SIZE 16
+
+typedef enum FILE_TYPE{
+	FILE_DATA,
+	FILE_DIR
+}FILE_TYPE;
+
+typedef struct file_chair{
+	char name[FILE_NAME_SIZE];
+	struct file_chair* files[FILE_EDGE_MAX];
+	char data[FILE_SIZE];
+	FILE_TYPE type;
+}file_chair;
+
+file_chair* file_init(FILE_TYPE type, char* name, char* data);
+void file_remove(file_chair* fl);
+void file_connect(file_chair* a, file_chair* b);
+void file_disconnect(file_chair* a, file_chair* b);
+char* file_parse_pointer(file_chair* s, char* path);
 
 VECTOR(address_stack, u64)
 
@@ -26,6 +47,8 @@ typedef struct server_chair{
 	u64 address;
 	port_list ports;
 	i8 rom[BUFFER_SIZE];
+	file_chair* root;
+	file_chair* ptr;
 }server_chair;
 
 typedef struct server_address_space{
@@ -47,4 +70,11 @@ void server_disconnect(server_chair* s, u64 address);
 
 void substring(i8 s[], i8 sub[], i32 p, i32 l);
 i32 find_ch_index(i8 string[], i8 ch);
+
+void server_cd(server_chair* s, char* arg, char* line);
+void server_ls(server_chair* s, char* line);
+void server_mkdir(server_chair* s, char* arg, char* line);
+void server_link(server_chair* s, char* arg, char* line);
+void server_rm(server_chair* s, char* arg, char* line);
+
 #endif
