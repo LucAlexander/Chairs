@@ -38,7 +38,7 @@ typedef enum TAB_STATE{
 }TAB_STATE;
 
 typedef struct tab_chair{
-	i8 client[BUFFER_SIZE];
+	char client[BUFFER_SIZE];
 	u8 flags;
 	u32 w, h;
 	u32 sx, sy;

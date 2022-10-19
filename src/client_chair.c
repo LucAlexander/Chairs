@@ -16,8 +16,10 @@ void input_stream_init(input_stream* stream){
 	}
 }
 
-void input_stream_new_line(input_stream* stream){
-	strcat(stream->line[stream->target], "\n");
+void input_stream_new_line(input_stream* stream, u8 nl){
+	if (nl){
+		strcat(stream->line[stream->target], "\n");
+	}
 	if (stream->target < LINE_COUNT-1){
 		stream->target ++;
 		return;
@@ -66,7 +68,6 @@ SYSTEM(client_input){
 	}
 	if (enter){
 		parseCommand(client, server);
-		input_stream_new_line(&client->buffer);
 		if (client->buffer.target != LINE_COUNT-1){
 			u16 u8_h = getTextHeight(xi->graphics, "#")+LINE_SPACING;
 			u16 current_pane = client->buffer.target-client->scroll;
@@ -82,7 +83,7 @@ SYSTEM(client_input){
 		strcat(client->buffer.line[client->buffer.target], " ");
 		scrollToCurrent(xi, client, tab);
 	}
-	i8 keys[48];
+	char keys[48];
 	keystream(xi->user_input, keys, "1234567890-=qazwsxedcrfvtgbyhnujmik,./;'lop[]\\");
 	if ((strcmp(keys, "") == 0) || strlen(keys) + strlen(client->buffer.line[client->buffer.target]) > 63) return;
 	strcat(client->buffer.line[client->buffer.target], keys);
@@ -90,38 +91,73 @@ SYSTEM(client_input){
 	
 }
 
-void parseCommand(client_chair* client, server_chair* sever){
-	if (strcmp(client->buffer.line[client->buffer.target],"exit")==0){
+void parseCommand(client_chair* client, server_chair* server){
+	char command[LINE_WIDTH];
+	char output[LINE_WIDTH*8];
+	strcpy(command, client->buffer.line[client->buffer.target]);
+	strcpy(client->buffer.line[client->buffer.target], server->ptr->name);
+	strcat(client->buffer.line[client->buffer.target], "> ");
+	strcat(client->buffer.line[client->buffer.target], command);
+	input_stream_new_line(&client->buffer, 1);
+	if (strcmp(command,"exit")==0){
 		printf("\tstub exit window\n");
 		return;
 	}
-	char* token = strtok(client->buffer.line[client->buffer.target]," ");
+	char* token = strtok(command," ");
 	if (token != NULL){
 		printf("token: %s\n", token);
 		if (strcmp(token, "cd")==0){
 			token = strtok(NULL, " ");
+			if (token == NULL) return;
+			server_cd(server, token, output);
+			feed_output(client, output);
 			printf("\tstub cd %s\n", token);
 			return;
 		}
 		if (strcmp(token, "ls")==0){
-			token = strtok(NULL, " ");
+			server_ls(server, output); 
+			feed_output(client, output);
 			printf("\tstub ls %s\n", token);
 			return;
 		}
 		if (strcmp(token, "mkdir")==0){
 			token = strtok(NULL, " ");
+			if (token == NULL) return;
+			server_mkdir(server, token, output);
+			feed_output(client, output);
 			printf("\tstub mkdir %s\n", token);
 			return;
 		}
 		if (strcmp(token, "rm")==0){
 			token = strtok(NULL, " ");
+			if (token == NULL) return;
+			server_rm(server, token, output);
+			feed_output(client, output);
 			printf("\tstub rm %s\n", token);
 			return;
 		}
 		if (strcmp(token, "link")==0){
 			token = strtok(NULL, " ");
-			printf("\nstub link %s\n", token);
+			if (token == NULL) return;
+			server_link(server, token, output);
+			feed_output(client, output);
+			printf("\tstub link %s\n", token);
 			return;
 		}
+	}
+}
+
+void feed_output(client_chair* client, char* output){
+	char line[LINE_WIDTH];
+	i32 nl = find_ch_index(output, '\n');
+	u16 p = 0;
+	while (nl != -1){
+		strncpy(line, output+p, nl);
+		line[nl] = '\0';
+		output[nl-1] = ' ';
+		strcat(client->buffer.line[client->buffer.target], line);
+		input_stream_new_line(&client->buffer, 0);
+		p+=nl;
+		nl = find_ch_index(output+p, '\n');
 	}
 }

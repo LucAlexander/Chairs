@@ -67,6 +67,10 @@ void spawn_client(xi_utils* xi, u32 x, u32 y, u32 w, u32 h){
 
 	server_chair s;
 	server_init(&s, 1, &xi->project->address_space);
+	char line[256];
+	server_mkdir(&s, "desktop", line);
+	server_mkdir(&s, "documents", line);
+	server_mkdir(&s, "downloads", line);
 
 	component_add(xi->ecs, entity, POSITION_C, &pos);
 	component_add(xi->ecs, entity, TAB_C, &t);

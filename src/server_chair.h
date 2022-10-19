@@ -38,7 +38,7 @@ typedef struct port_chair{
 	u64 address;
 	PORT_JOB job;
 	struct port_chair* socket;
-	i8 data[1024];
+	char data[1024];
 }port_chair;
 
 VECTOR(port_list, port_chair)
@@ -46,7 +46,7 @@ VECTOR(port_list, port_chair)
 typedef struct server_chair{
 	u64 address;
 	port_list ports;
-	i8 rom[BUFFER_SIZE];
+	char rom[BUFFER_SIZE];
 	file_chair* root;
 	file_chair* ptr;
 }server_chair;
@@ -68,8 +68,8 @@ void server_transfer_data(port_chair* sender, port_chair* reciever);
 void server_connect(server_chair* s, server_chair* foreign, u16 port);
 void server_disconnect(server_chair* s, u64 address);
 
-void substring(i8 s[], i8 sub[], i32 p, i32 l);
-i32 find_ch_index(i8 string[], i8 ch);
+void substring(char s[], char sub[], i32 p, i32 l);
+i32 find_ch_index(char string[], char ch);
 
 void server_cd(server_chair* s, char* arg, char* line);
 void server_ls(server_chair* s, char* line);

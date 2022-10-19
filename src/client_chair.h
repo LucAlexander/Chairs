@@ -15,7 +15,7 @@ typedef struct input_stream{
 }input_stream;
 
 void input_stream_init(input_stream* stream);
-void input_stream_new_line(input_stream* stream);
+void input_stream_new_line(input_stream* stream, u8 nl);
 
 typedef struct client_chair{
 	input_stream buffer;
@@ -26,6 +26,7 @@ void client_buffer_init(client_chair* client);
 void scrollToCurrent(xi_utils* xi, client_chair* client, struct tab_chair* tab);
 
 void parseCommand(client_chair* client, server_chair* server);
+void feed_output(client_chair* client, char* output);
 
 SYSTEM(client_input);
 

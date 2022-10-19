@@ -134,7 +134,7 @@ SYSTEM(draw_tab){
 	dy = 0;
 	p = 0;
 	n = strlen(tab->client);
-	i8 line[line_w];
+	char line[line_w];
 	while (p < n && dy < (tab->h-i8_h)){
 		strncpy(line, tab->client+p, line_w);
 		line[line_w] = '\0';

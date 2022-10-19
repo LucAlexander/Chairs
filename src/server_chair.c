@@ -61,7 +61,9 @@ void file_disconnect(file_chair* a, file_chair* b){
 }
 
 char* file_parse_pointer(file_chair* node, char* path){
-	char* token = strtok(path, "/");
+	char cpy[256];
+	strcpy(cpy, path);
+	char* token = strtok(cpy, "/");
 	u16 i;
 	file_chair* ptr = node;
 	while (token != NULL){
@@ -74,12 +76,12 @@ char* file_parse_pointer(file_chair* node, char* path){
 				found = 1;
 				break;
 			}
-			if (!found){
-				if (NULL==strtok(NULL, "/")){
-					return token;
-				}
-				return NULL;
+		}
+		if (!found){
+			if (NULL==strtok(NULL, "/")){
+				return token;
 			}
+			return NULL;
 		}
 		token = strtok(NULL, "/");
 	}
@@ -160,7 +162,7 @@ void server_disconnect(server_chair* s, u64 address){
 	}
 }
 
-void substring(i8 s[], i8 sub[], i32 p, i32 l) {
+void substring(char s[], char sub[], i32 p, i32 l) {
 	i32 c = 0;
 	while (c < l) {
 		sub[c] = s[p+c-1];
@@ -169,7 +171,7 @@ void substring(i8 s[], i8 sub[], i32 p, i32 l) {
 	sub[c] = '\0';
 }
 
-i32 find_ch_index(i8 string[], i8 ch) {
+i32 find_ch_index(char string[], char ch) {
     i32 i = 0;
     while (string[i] != '\0') if (string[i++] == ch) return i;
     return -1;
